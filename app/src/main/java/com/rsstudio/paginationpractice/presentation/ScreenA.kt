@@ -55,10 +55,6 @@ fun ScreenA(
     onAction: (ScreenAActions) -> Unit,
     viewModel: ScreenAViewModel = hiltViewModel()
 ) {
-    // FIX: Always show Scaffold with search box, handle empty state inside content
-    // BEFORE: EMPTY state took whole screen, hiding search box
-    // ISSUE: User couldn't search again when "No data available" was shown
-    // NOW: Search box always visible, empty state shows inside content area
     Scaffold(
         topBar = {
             TopAppBar(title = {
@@ -237,21 +233,6 @@ fun MovieItem(
         )
         Spacer(Modifier.size(24.dp))
     }
-}
-
-// NOTE: This extension function was previously used directly in the composable body
-// which caused infinite recomposition loops. It's kept here for reference but no longer used.
-// 
-// OLD PROBLEMATIC USAGE:
-// if (listState.isScrolledToTheEnd()) {
-//     onEvent(ScreenAEvent.LoadMore)  // <- This was called every recomposition!
-// }
-//
-// We now use LaunchedEffect with canScrollForward to properly handle pagination triggers
-fun LazyListState.isScrolledToTheEnd(): Boolean {
-    val layoutInfo = this.layoutInfo
-    val visibleItems = layoutInfo.visibleItemsInfo
-    return visibleItems.isNotEmpty() && visibleItems.last().index == layoutInfo.totalItemsCount - 1
 }
 
 
